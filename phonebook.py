@@ -88,13 +88,14 @@ def deleteContact(phonebook):
 
 
 def choose(phonebook):
-    options = ["1", "2", "3", "4", "5"]
+    options = ["1", "2", "3", "4", "5", "6"]
     q = """
 To add a new contact,        please press 1
 To delete a contact,         please press 2
 To find a contact by name,   please press 3
 To find a contact by number, please press 4
-To see the phonebook,        please press 5\n\n"""
+To see the phonebook,        please press 5
+To exit the program,         please press 6\n\n"""
 
     print("Hello")
     opt = raw_input(q)
@@ -110,6 +111,8 @@ To see the phonebook,        please press 5\n\n"""
             searchPhonebookNumber(phonebook)
         if opt == options[4]:
             showPhonebook(phonebook)
+        if opt == options[5]:
+            quit()
 
         choose(phonebook)
     else:
