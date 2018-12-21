@@ -1,4 +1,5 @@
 import os
+import random
 
 
 class Ship:
@@ -31,28 +32,30 @@ class Ship:
 
         self.place_ship(self.holes, self.row, self.column, self.orient, "===", "|||")
 
-        print(self.CWHITE + "\t 1  2  3  4  5  6  7  8  9  10" + self.CEND)
+        print(self.CWHITE + "     1  2  3  4  5  6  7  8  9  10" + self.CEND)
+        lets = "a b c d e f g h i j"
+        lets = lets.split()
         for i in range(len(self.board)):
             tem = "".join(self.board[i])
-            print self.CWHITE, i+1, self.CEND, "\t", tem
-
-
+            print self.CWHITE, lets[i], self.CEND, tem
 
 
 class Board:
 
-    # making grid
     CBLUE = '\033[34m'
     CWHITE = '\033[37m'
     CEND = '\033[0m'
-    board = []
-    for i in range(10):
-        innerBoard = []
-        for j in range(10):
-            innerBoard.append(CBLUE + " ~ " + CEND)
-        board.append(innerBoard)
 
     def __init__(self, carrier, battleship, cruiser, submarine, destroyer):
+        # making grid
+        board = []
+        for i in range(10):
+            innerBoard = []
+            for j in range(10):
+                innerBoard.append(self.CBLUE + " ~ " + self.CEND)
+            board.append(innerBoard)
+
+        self.board = board
         self.carrier = carrier
         self.battleship = battleship
         self.cruiser = cruiser
@@ -79,22 +82,33 @@ class Board:
         self.place_ship(2, self.submarine.row, self.submarine.column, self.submarine.orient, "(==", "==o", "==)", "( )", "|o|", "( )")
         self.place_ship(1, self.destroyer.row, self.destroyer.column, self.destroyer.orient, "<={", "={]", "[]>", "(^)", "|^|", "[=]")
 
-        print(self.CWHITE + "\t 1  2  3  4  5  6  7  8  9  10" + self.CEND)
+        print(self.CWHITE + "     1  2  3  4  5  6  7  8  9  10" + self.CEND)
+        lets = "a b c d e f g h i j"
+        lets = lets.split()
         for i in range(len(self.board)):
             tem = "".join(self.board[i])
-            print self.CWHITE, i+1, self.CEND, "\t", tem
+            print self.CWHITE, lets[i], self.CEND, tem
 
 
 def check(num, holes, rORc):
-    while not num.isdigit():
-        num = raw_input("please enter a number: ")
-    num = int(num)
-    while num > 10 - holes:
-        print "Your", rORc, "number is invalid"
-        num = raw_input("please try again: ")
+    if rORc == "row":
+        while num > 10 - holes:
+            print "Your row is invalid"
+            num = raw_input("please try again: ")
+            while num not in lets:
+                print("Your row is invalid")
+                num = raw_input("try again: ")
+            num = lets.index(row)
+    else:
         while not num.isdigit():
             num = raw_input("please enter a number: ")
         num = int(num)
+        while num > 10 - holes:
+            print "Your column number is invalid"
+            num = raw_input("please try again: ")
+            while not num.isdigit():
+                num = raw_input("please enter a number: ")
+            num = int(num)
 
     return num-1
 
@@ -129,10 +143,10 @@ def build_ship(ship, holes):
             lap = True
             while lap:
                 row = raw_input(r_q)
-                while not row.isdigit():
-                    print("Your row number is invalid")
-                    row = raw_input("please enter a number 1-10: ")
-                row = int(row)-1
+                while row not in lets:
+                    print("Your row is invalid")
+                    row = raw_input("try again: ")
+                row = lets.index(row)
 
                 column = raw_input(c_q)
                 column = check(column, holes, "column")
@@ -146,7 +160,11 @@ def build_ship(ship, holes):
             lap = True
             while lap:
                 row = raw_input(r_q)
-                row = check(row, holes-1, "row")
+                while row not in lets:
+                    print("Your row is invalid")
+                    row = raw_input("try again: ")
+                row = lets.index(row)
+                row = check(row, holes-1, "row")+1
 
                 column = raw_input(c_q)
                 while not column.isdigit():
@@ -165,25 +183,7 @@ def build_ship(ship, holes):
     return Ship(row, column, orientation, holes)
 
 
-def main():
-    global taken
-    CBLUE = '\033[34m'
-    CWHITE = '\033[37m'
-    CEND = '\033[0m'
-    taken = []
-
-    os.system("clear")
-    board = []
-    for i in range(10):
-        innerBoard = []
-        for j in range(10):
-            innerBoard.append(CBLUE + " ~ " + CEND)
-        board.append(innerBoard)
-
-    print(CWHITE + "\t 1  2  3  4  5  6  7  8  9  10" + CEND)
-    for i in range(len(board)):
-        tem = "".join(board[i])
-        print CWHITE, i+1, CEND, "\t", tem
+def make_player_board():
 
     carrier = build_ship("carrier", 5)
     os.system("clear")
@@ -200,8 +200,94 @@ def main():
     destroyer = build_ship("destroyer", 2)
     os.system("clear")
 
-    board1 = Board(carrier, battleship, cruiser, submarine, destroyer)
+    return Board(carrier, battleship, cruiser, submarine, destroyer)
+
+
+def generate_ship(holes):
+    orientation = random.randint(1, 2)
+    if orientation == 1:
+        orientation = "h"
+        lap = True
+        while lap:
+            row = random.randint(1, 9)
+            column = random.randint(1, 9 - holes)
+            points = []
+            for i in range(holes):
+                points.append([row, column+i])
+
+            x = 0
+            for i in points:
+                if i in cpuTaken:
+                    x += 1
+            if x < 1:
+                lap = False
+
+        for i in range(holes):
+            cpuTaken.append([row, column+i])
+
+    else:
+        orientation = "v"
+        lap = True
+        while lap:
+            row = random.randint(1, 9 - holes)
+            column = random.randint(1, 9)
+            points = []
+            for i in range(holes):
+                points.append([row+i, column])
+
+            x = 0
+            for i in points:
+                if i in cpuTaken:
+                    x += 1
+            if x < 1:
+                lap = False
+
+        for i in range(holes):
+            cpuTaken.append([row+i, column])
+    return Ship(row, column, orientation, holes)
+
+
+def make_cpu_board():
+    carrier = generate_ship(5)
+    battleship = generate_ship(4)
+    cruiser = generate_ship(3)
+    submarine = generate_ship(3)
+    destroyer = generate_ship(2)
+
+    return Board(carrier, battleship, cruiser, submarine, destroyer)
+
+
+def main():
+    global taken
+    taken = []
+    global cpuTaken
+    cpuTaken = []
+    CBLUE = '\033[34m'
+    CWHITE = '\033[37m'
+    CEND = '\033[0m'
+
+    os.system("clear")
+    board = []
+    for i in range(10):
+        innerBoard = []
+        for j in range(10):
+            innerBoard.append(CBLUE + " ~ " + CEND)
+        board.append(innerBoard)
+
+    print(CWHITE + "     1  2  3  4  5  6  7  8  9  10" + CEND)
+    global lets
+    lets = "a b c d e f g h i j"
+    lets = lets.split()
+    for i in range(len(board)):
+        tem = "".join(board[i])
+        print CWHITE, lets[i], CEND, tem
+
+    board1 = make_player_board()
     board1.display_board()
+    x = raw_input("HIT ENTER TO CONTINUE")
+
+    cpuBoard = make_cpu_board()
+    cpuBoard.display_board()
 
 
 main()
