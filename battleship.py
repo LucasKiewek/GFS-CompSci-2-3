@@ -3,11 +3,14 @@ import os
 
 class Ship:
 
+    CBLUE = '\033[34m'
+    CWHITE = '\033[37m'
+    CEND = '\033[0m'
     board = []
     for i in range(10):
         innerBoard = []
         for j in range(10):
-            innerBoard.append(" ~ ")
+            innerBoard.append(CBLUE + " ~ " + CEND)
         board.append(innerBoard)
 
     def __init__(self, row, column, orient, holes):
@@ -26,12 +29,12 @@ class Ship:
 
     def display_setup(self):
 
-        self.place_ship(self.holes, self.row, self.column, self.orient, "===", " = ")
+        self.place_ship(self.holes, self.row, self.column, self.orient, "===", "|||")
 
-        print("\t 1  2  3  4  5  6  7  8  9  10")
+        print(self.CWHITE + "\t 1  2  3  4  5  6  7  8  9  10" + self.CEND)
         for i in range(len(self.board)):
             tem = "".join(self.board[i])
-            print i+1, "\t", tem
+            print self.CWHITE, i+1, self.CEND, "\t", tem
 
 
 
@@ -39,11 +42,14 @@ class Ship:
 class Board:
 
     # making grid
+    CBLUE = '\033[34m'
+    CWHITE = '\033[37m'
+    CEND = '\033[0m'
     board = []
     for i in range(10):
         innerBoard = []
         for j in range(10):
-            innerBoard.append(" ~ ")
+            innerBoard.append(CBLUE + " ~ " + CEND)
         board.append(innerBoard)
 
     def __init__(self, carrier, battleship, cruiser, submarine, destroyer):
@@ -73,10 +79,10 @@ class Board:
         self.place_ship(2, self.submarine.row, self.submarine.column, self.submarine.orient, "(==", "==o", "==)", "( )", "|o|", "( )")
         self.place_ship(1, self.destroyer.row, self.destroyer.column, self.destroyer.orient, "<={", "={]", "[]>", "(^)", "|^|", "[=]")
 
-        print("\t 1  2  3  4  5  6  7  8  9  10")
+        print(self.CWHITE + "\t 1  2  3  4  5  6  7  8  9  10" + self.CEND)
         for i in range(len(self.board)):
             tem = "".join(self.board[i])
-            print i+1, "\t", tem
+            print self.CWHITE, i+1, self.CEND, "\t", tem
 
 
 def check(num, holes, rORc):
@@ -140,7 +146,7 @@ def build_ship(ship, holes):
             lap = True
             while lap:
                 row = raw_input(r_q)
-                row = check(row, holes, "row")
+                row = check(row, holes-1, "row")
 
                 column = raw_input(c_q)
                 while not column.isdigit():
@@ -161,6 +167,9 @@ def build_ship(ship, holes):
 
 def main():
     global taken
+    CBLUE = '\033[34m'
+    CWHITE = '\033[37m'
+    CEND = '\033[0m'
     taken = []
 
     os.system("clear")
@@ -168,13 +177,13 @@ def main():
     for i in range(10):
         innerBoard = []
         for j in range(10):
-            innerBoard.append(" ~ ")
+            innerBoard.append(CBLUE + " ~ " + CEND)
         board.append(innerBoard)
 
-    print("\t 1  2  3  4  5  6  7  8  9  10")
+    print(CWHITE + "\t 1  2  3  4  5  6  7  8  9  10" + CEND)
     for i in range(len(board)):
         tem = "".join(board[i])
-        print i+1, "\t", tem
+        print CWHITE, i+1, CEND, "\t", tem
 
     carrier = build_ship("carrier", 5)
     os.system("clear")
