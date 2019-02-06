@@ -98,12 +98,12 @@ def check(num, holes, rORc):
             while num not in lets:
                 print("Your row is invalid")
                 num = raw_input("try again: ")
-            num = lets.index(row)
+            num = lets.index(num)+1
     else:
         while not num.isdigit():
             num = raw_input("please enter a number: ")
         num = int(num)
-        while num > 10 - holes:
+        while num > 11 - holes:
             print "Your column number is invalid"
             num = raw_input("please try again: ")
             while not num.isdigit():
@@ -163,8 +163,8 @@ def build_ship(ship, holes):
                 while row not in lets:
                     print("Your row is invalid")
                     row = raw_input("try again: ")
-                row = lets.index(row)
-                row = check(row, holes-1, "row")+1
+                row = lets.index(row)+1
+                row = check(row, holes-1, "row")
 
                 column = raw_input(c_q)
                 while not column.isdigit():
