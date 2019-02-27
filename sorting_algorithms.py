@@ -74,11 +74,11 @@ def main():
             choice = input("OPTIONS:\n1: random list\n2: input list\n\nChoice: ")
 
         Array = []
-        items = 10000
+        items = 1000
 
         if choice == "1":
             for i in range(items):  # random.randint(1, 30)
-                Array.append(random.randint(1, 3000))
+                Array.append(random.randint(1, items))
         elif choice == "2":
             temp = input("your Array (numbers separated by spaces):\n")
             temp = temp.split(" ")
